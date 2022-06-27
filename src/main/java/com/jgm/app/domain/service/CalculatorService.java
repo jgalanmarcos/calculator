@@ -4,6 +4,7 @@ import com.jgm.app.application.CalculatorServiceI;
 import com.jgm.app.domain.vo.AdditionOperation;
 import com.jgm.app.domain.vo.Operation;
 import com.jgm.app.domain.vo.SubtractionOperation;
+import com.jgm.app.infrastructure.exception.InvalidOperationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class CalculatorService implements CalculatorServiceI {
         Operation op = Operation.fromDisplayName(operation);
 
         if(op == null) {
-            throw new RuntimeException("Operation not allowed");
+            throw new InvalidOperationException(operation);
         }
 
         switch (op) {
@@ -37,7 +38,7 @@ public class CalculatorService implements CalculatorServiceI {
                 binaryOperationService.setBinaryOperation(new SubtractionOperation(operand1, operand2));
                 break;
             default:
-                throw new RuntimeException("Operation not allowed");
+                throw new InvalidOperationException(operation);
         }
 
         return binaryOperationService.execute();
